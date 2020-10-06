@@ -1,9 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: ReplicaSet
 metadata:
   name: {{ include "newchart.fullname" . }}
   labels:
     {{- include "newchart.labels" . | nindent 4 }}
+  annotations:
+    traffic.spinnaker.io/load-balancers: '["service {{ include "newchart.fullname" . }}"]'
+    strategy.spinnaker.io/max-version-history: '2'
+    something: "test"
 spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
